@@ -370,9 +370,7 @@ class Builder
             return $result;
         }
 
-        throw (new ModelNotFoundException)->setModel(
-            get_class($this->model), $id
-        );
+        throw new ModelNotFoundException($this->model, $id);
     }
 
     /**
@@ -453,7 +451,7 @@ class Builder
             return $model;
         }
 
-        throw (new ModelNotFoundException)->setModel(get_class($this->model));
+        throw new ModelNotFoundException($this->model);
     }
 
     /**
