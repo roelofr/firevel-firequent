@@ -3,12 +3,6 @@
     "description": "Limited implementation of Eloquent based on Firestore.",
     "keywords": ["laravel", "eloquent", "firestore", "app engine", "google cloud", "firevel", "firequent", "serverless"],
     "type": "library",
-    "require": {
-        "grpc/grpc": "^1.30.0",
-        "google/protobuf": "^v3.13.0",
-        "google/cloud-firestore": "^1.14.1",
-        "laravel/framework": "^5.8||^6.0||^7.0"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -16,6 +10,12 @@
             "email": "michael.slowik@firevel.com"
         }
     ],
+    "require": {
+        "grpc/grpc": "^1.30.0",
+        "google/protobuf": "^v3.13.0",
+        "google/cloud-firestore": "^1.14.1",
+        "laravel/framework": "^5.8||^6.0||^7.0"
+    },
     "autoload": {
         "psr-4": {
             "Firevel\\Firequent\\": "src/"
