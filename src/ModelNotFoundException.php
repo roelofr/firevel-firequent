@@ -4,6 +4,7 @@ namespace Firevel\Firequent;
 
 use Illuminate\Support\Arr;
 use RuntimeException;
+use Throwable;
 
 class ModelNotFoundException extends RuntimeException
 {
@@ -22,26 +23,30 @@ class ModelNotFoundException extends RuntimeException
     protected $ids;
 
     /**
-     * Set the affected Eloquent model and instance ids.
-     *
-     * @param  string  $model
-     * @param  int|array  $ids
-     * @return $this
+     * @param null|string|object $model
+     * @param array|scalar $ids
+     * @param int $code
+     * @param null|Throwable $previous
      */
-    public function setModel($model, $ids = [])
-    {
-        $this->model = $model;
+    public function __construct(
+        $model = null,
+        $ids = [],
+        int $code = 0,
+        ?Throwable $previous = null
+    ) {
+        $this->model = is_object($model) ? get_class($model) : $model;
         $this->ids = Arr::wrap($ids);
 
-        $this->message = "No query results for model [{$model}]";
-
-        if (count($this->ids) > 0) {
-            $this->message .= ' '.implode(', ', $this->ids);
-        } else {
-            $this->message .= '.';
+        $message = "No query results for model";
+        if ($this->model) {
+            $message .= " [{$this->model}]";
         }
 
-        return $this;
+        if ($this->ids) {
+            $message .= sprintf(' with ids [%s]', implode(', ', $this->ids));
+        }
+
+        parent::__construct("{$message}.", $code, $previous);
     }
 
     /**
