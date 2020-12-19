@@ -14,7 +14,7 @@ class ModelNotFoundExceptionTest extends TestCase
         $this->assertEmpty($ex->getIds());
         $this->assertNull($ex->getModel());
 
-        $this->assertEmpty($ex->getMessage());
+        $this->assertEquals('No query results for model.', $ex->getMessage());
         $this->assertEquals(0, $ex->getCode());
         $this->assertNull($ex->getPrevious());
     }
@@ -22,8 +22,20 @@ class ModelNotFoundExceptionTest extends TestCase
     public function testWithModel()
     {
         $model = TestCase::class;
-        $ex = (new ModelNotFoundException())
-            ->setModel($model);
+        $ex = new ModelNotFoundException($model);
+
+        $this->assertEmpty($ex->getIds());
+        $this->assertEquals($model, $ex->getModel());
+
+        $this->assertEquals("No query results for model [{$model}].", $ex->getMessage());
+        $this->assertEquals(0, $ex->getCode());
+        $this->assertNull($ex->getPrevious());
+    }
+
+    public function testWithInstance()
+    {
+        $model = get_class($this);
+        $ex = new ModelNotFoundException($this);
 
         $this->assertEmpty($ex->getIds());
         $this->assertEquals($model, $ex->getModel());
@@ -36,13 +48,12 @@ class ModelNotFoundExceptionTest extends TestCase
     public function testWithModelAndId()
     {
         $model = TestCase::class;
-        $ex = (new ModelNotFoundException())
-            ->setModel($model, 1234);
+        $ex = new ModelNotFoundException($model, 1234);
 
         $this->assertEquals([1234], $ex->getIds());
         $this->assertEquals($model, $ex->getModel());
 
-        $this->assertEquals("No query results for model [{$model}] 1234", $ex->getMessage());
+        $this->assertEquals("No query results for model [{$model}] with ids [1234].", $ex->getMessage());
         $this->assertEquals(0, $ex->getCode());
         $this->assertNull($ex->getPrevious());
     }
@@ -50,13 +61,12 @@ class ModelNotFoundExceptionTest extends TestCase
     public function testWithModelAndIdList()
     {
         $model = TestCase::class;
-        $ex = (new ModelNotFoundException())
-            ->setModel($model, [1234, '5533', 'steve']);
+        $ex = new ModelNotFoundException($model, [1234, '5533', 'steve']);
 
         $this->assertEquals([1234, '5533', 'steve'], $ex->getIds());
         $this->assertEquals($model, $ex->getModel());
 
-        $this->assertEquals("No query results for model [{$model}] 1234, 5533, steve", $ex->getMessage());
+        $this->assertEquals("No query results for model [{$model}] with ids [1234, 5533, steve].", $ex->getMessage());
         $this->assertEquals(0, $ex->getCode());
         $this->assertNull($ex->getPrevious());
     }
